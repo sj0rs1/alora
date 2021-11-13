@@ -1,3 +1,14 @@
+local userInputService = game:GetService("UserInputService")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local runService = game:GetService("RunService")
+local players = game:GetService("Players")
+local lighting = game:GetService("Lighting")
+local localPlayer = players.LocalPlayer
+local camera = workspace.CurrentCamera
+local mouse = localPlayer:GetMouse()
+local debris = game:GetService("Debris")
+local client = getsenv(localPlayer.PlayerGui.Client)
+
 local menu = game:GetObjects("rbxassetid://7142010382")[1]
 local tabholder = menu.outline.outline.main.group
 menu.outline.Position = UDim2.new(0.5,-menu.outline.Size.X.Offset/2,0.5,-menu.outline.Size.Y.Offset/2)
