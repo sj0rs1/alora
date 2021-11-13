@@ -787,4 +787,4 @@ game:GetService("RunService").RenderStepped:Connect(function()
     cursor.Position = Vector2.new(mouse.X-16,mouse.Y+18)	
 end)
 
-return library,menu,tabholder,cursor
+return library,menu,tabholder
