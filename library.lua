@@ -1,4 +1,4 @@
--- I Don't recommend using any of this code since its not near optimal.
+-- I don't recommend using any of this code since its not near optimal.
 
 local userInputService = game:GetService("UserInputService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
