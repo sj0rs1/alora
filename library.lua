@@ -782,4 +782,4 @@ function library:deleteConfig()
     end
 end
 
-return library,menu,tabholder
+return library,menu,tabholder,cursor
