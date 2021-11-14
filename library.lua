@@ -8,8 +8,6 @@ local lighting = game:GetService("Lighting")
 local localPlayer = players.LocalPlayer
 local camera = workspace.CurrentCamera
 local mouse = localPlayer:GetMouse()
-local debris = game:GetService("Debris")
-local client = getsenv(localPlayer.PlayerGui.Client)
 
 local menu = game:GetObjects("rbxassetid://7142010382")[1]
 local tabholder = menu.outline.outline.main.group
@@ -783,7 +781,7 @@ function library:deleteConfig()
 end
 
 local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-game:GetService("RunService").RenderStepped:Connect(function()
+runService.RenderStepped:Connect(function()
     cursor.Position = Vector2.new(mouse.X-16,mouse.Y+18)	
 end)
 
