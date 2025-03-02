@@ -782,7 +782,7 @@ end
 
 local mouse = game:GetService("Players").LocalPlayer:GetMouse()
 runService.RenderStepped:Connect(function()
-    cursor.Position = Vector2.new(mouse.X-16,mouse.Y)	
+    cursor.Position = Vector2.new(mouse.X-16,mouse.Y+32)	
 end)
 
 return library,menu,tabholder
