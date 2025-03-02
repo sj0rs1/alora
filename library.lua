@@ -20,7 +20,7 @@ function draggable(a)local b=userInputService;local c;local d;local e;local f;lo
 draggable(menu.outline)
 
 local cursor = Drawing.new("Image")
-cursor.Data = game:HttpGet("https://fini.work/cursor.png")
+cursor.Data = game:HttpGet("https://raw.githubusercontent.com/sj0rs1/alora/refs/heads/main/cursor.png")
 cursor.Size = Vector2.new(32,32)
 cursor.Visible = true
 
