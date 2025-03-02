@@ -7,14 +7,12 @@
 
 alora, a free and open source Counter Blox script created by sjors
 
-alora discord: https://discord.gg/m3aMvdynrf
-cuteware discord: https://discord.gg/nyZaeASbsk
-
 --]]
 repeat wait() until game:IsLoaded()
+
 if game:GetService("CoreGui"):FindFirstChild("sjorlib") then return end
 getgenv().error = function() end
-local ver = "1.0.0"
+local ver = "1.0.1"
 --files
 if not isfolder("alora") then
     makefolder("alora")
@@ -35,8 +33,8 @@ local mouse = localPlayer:GetMouse()
 local debris = game:GetService("Debris")
 local client = getsenv(localPlayer.PlayerGui.Client)
 
-local aloraWatermark = Drawing.new("Text");aloraWatermark.Font = 2;aloraWatermark.Position = Vector2.new(50,24);aloraWatermark.Visible = false;aloraWatermark.Size = 13;aloraWatermark.Color = Color3.new(1,1,1);aloraWatermark.Outline = true
-local speclistText = Drawing.new("Text");speclistText.Font = 2;speclistText.Position = Vector2.new(8,305);speclistText.Visible = false;speclistText.Size = 13;speclistText.Color = Color3.new(1,1,1);speclistText.Outline = true
+local aloraWatermark = Drawing.new("Text");aloraWatermark.Font = Drawing.Fonts.Plex;aloraWatermark.Position = Vector2.new(50,24);aloraWatermark.Visible = false;aloraWatermark.Size = 16;aloraWatermark.Color = Color3.new(1,1,1);aloraWatermark.Outline = true
+local speclistText = Drawing.new("Text");speclistText.Font = Drawing.Fonts.Plex;speclistText.Position = Vector2.new(8,305);speclistText.Visible = false;speclistText.Size = 16;speclistText.Color = Color3.new(1,1,1);speclistText.Outline = true
 
 local skyboxes = {
     ["Purple Nebula"] = {
@@ -141,6 +139,14 @@ local hitboxList = {
 }
 
 --functions
+function encodePos(pos)
+    return Vector3.new(((pos.X - 74312) * 4 + 1325) * 13,(pos.Y + 3183421) * 4 - 4201432,(pos.Z * 41 - 581357) * 2)
+end
+
+function decodePos(encodedPos)
+    return Vector3.new(((encodedPos.X / 13 - 1325) / 4) + 74312,((encodedPos.Y + 4201432) / 4) - 3183421,((encodedPos.Z / 2 + 581357) / 41))
+end
+
 function isAlive(plr)
     if not plr then plr = localPlayer end
     return plr.Character and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("Head") and plr.Character.Humanoid.Health > 0 and true or false
@@ -310,14 +316,14 @@ function createEsp(plr)
     local healthbarESPoutline = Drawing.new("Square")
     local healthbarESP = Drawing.new("Square")
 
-    textESP.Font = 2
-    textESP.Size = 13
+    textESP.Font = Drawing.Fonts.Plex
+    textESP.Size = 16
     textESP.Color = Color3.new(1,1,1)
     textESP.OutlineColor = Color3.new(0,0,0)
     textESP.Transparency = 1
 
-    textDropShadowESP.Font = 2
-    textDropShadowESP.Size = 13
+    textDropShadowESP.Font = Drawing.Fonts.Plex
+    textDropShadowESP.Size = 16
     textDropShadowESP.Color = Color3.new(0,0,0)
     textDropShadowESP.OutlineColor = Color3.new(0,0,0)
     textDropShadowESP.Transparency = 1
@@ -450,6 +456,7 @@ meta.__newindex = newcclosure(function(self,idx,val)
 end)
 
 meta.__namecall = newcclosure(function(self,...)
+    local argsCount = select("#", ...)
     local args = {...}
     local method = getnamecallmethod()
 
@@ -491,8 +498,8 @@ meta.__namecall = newcclosure(function(self,...)
             return
         end
         if self.Name == "ApplyGun" then
-            if string.find(args[1].Name,"Banana") or string.find(args[1].Name,"Flip") then 
-                args[1] = replicatedStorage.Weapons[localPlayer.Status.Team.Value.." Knife"]
+            if string.find(args[1],"Banana") or string.find(args[1],"Flip") then 
+                args[1] = localPlayer.Status.Team.Value.." Knife"
             end
         end
         if self.Name == "HitPart" then
@@ -519,13 +526,13 @@ meta.__namecall = newcclosure(function(self,...)
                 if library.flags["bullet_tracer"] and localPlayer.Character and  camera:FindFirstChild("Arms") then
                     local from = camera.Arms:FindFirstChild("Flash")
                     if from then
-                        createTracer(args[2],from)
+                        createTracer(decodePos(args[2]),from)
                     end
                 end
             end)
             if btInfo.parent and not preventBt then
                 args[1] = btInfo.parent.Head
-                args[2] = args[1].Position
+                args[2] = encodePos(args[1].Position)
                 timeout = 7
                 btInfo.parent = nil
                 spawn(function()
@@ -563,8 +570,15 @@ meta.__namecall = newcclosure(function(self,...)
             end
         end   
     end
-    return oldNamecall(self,unpack(args))
+    return oldNamecall(self, table.unpack(args, 1, argsCount))
 end)
+
+-- local firebullet = client.firebullet
+-- client.firebullet = function(self,...)
+-- 	if not menu.Enabled then
+-- 		firebullet(self,...)
+-- 	end
+-- end
 
 local aimbotTab = library:addTab("Aimbot")
 local visualsTab = library:addTab("Visuals")
@@ -741,13 +755,13 @@ worldSettingsFrame2.Visible = false
 
 local lines = {}
 local lastPos = camera.ViewportSize.Y-90
-local veloIndicator = Drawing.new("Text");veloIndicator.Center = true;veloIndicator.Outline = true;veloIndicator.Color = Color3.new(1,1,1);veloIndicator.Font = 2;veloIndicator.Size = 13;veloIndicator.Visible = false;veloIndicator.Text = "0"
-local wIndicator = Drawing.new("Text");wIndicator.Center = true;wIndicator.Outline = true;wIndicator.Color = Color3.new(1,1,1);wIndicator.Font = 2;wIndicator.Size = 13;wIndicator.Visible = false;wIndicator.Text = "-"
-local aIndicator = Drawing.new("Text");aIndicator.Center = true;aIndicator.Outline = true;aIndicator.Color = Color3.new(1,1,1);aIndicator.Font = 2;aIndicator.Size = 13;aIndicator.Visible = false;aIndicator.Text = "-"
-local sIndicator = Drawing.new("Text");sIndicator.Center = true;sIndicator.Outline = true;sIndicator.Color = Color3.new(1,1,1);sIndicator.Font = 2;sIndicator.Size = 13;sIndicator.Visible = false;wIndicator.Text = "-"
-local dIndicator = Drawing.new("Text");dIndicator.Center = true;dIndicator.Outline = true;dIndicator.Color = Color3.new(1,1,1);dIndicator.Font = 2;dIndicator.Size = 13;dIndicator.Visible = false;dIndicator.Text = "-"
-local spaceIndicator = Drawing.new("Text");spaceIndicator.Center = true;spaceIndicator.Outline = true;spaceIndicator.Color = Color3.new(1,1,1);spaceIndicator.Font = 2;spaceIndicator.Size = 13;spaceIndicator.Visible = false;spaceIndicator.Text = "-"
-local ctrlIndicator = Drawing.new("Text");ctrlIndicator.Center = true;ctrlIndicator.Outline = true;ctrlIndicator.Color = Color3.new(1,1,1);ctrlIndicator.Font = 2;ctrlIndicator.Size = 13;ctrlIndicator.Visible = false;ctrlIndicator.Text = "-"
+local veloIndicator = Drawing.new("Text");veloIndicator.Center = true;veloIndicator.Outline = true;veloIndicator.Color = Color3.new(1,1,1);veloIndicator.Font = Drawing.Fonts.Plex;veloIndicator.Size = 16;veloIndicator.Visible = false;veloIndicator.Text = "0"
+local wIndicator = Drawing.new("Text");wIndicator.Center = true;wIndicator.Outline = true;wIndicator.Color = Color3.new(1,1,1);wIndicator.Font = Drawing.Fonts.Plex;wIndicator.Size = 16;wIndicator.Visible = false;wIndicator.Text = "-"
+local aIndicator = Drawing.new("Text");aIndicator.Center = true;aIndicator.Outline = true;aIndicator.Color = Color3.new(1,1,1);aIndicator.Font = Drawing.Fonts.Plex;aIndicator.Size = 16;aIndicator.Visible = false;aIndicator.Text = "-"
+local sIndicator = Drawing.new("Text");sIndicator.Center = true;sIndicator.Outline = true;sIndicator.Color = Color3.new(1,1,1);sIndicator.Font = Drawing.Fonts.Plex;sIndicator.Size = 16;sIndicator.Visible = false;wIndicator.Text = "-"
+local dIndicator = Drawing.new("Text");dIndicator.Center = true;dIndicator.Outline = true;dIndicator.Color = Color3.new(1,1,1);dIndicator.Font = Drawing.Fonts.Plex;dIndicator.Size = 16;dIndicator.Visible = false;dIndicator.Text = "-"
+local spaceIndicator = Drawing.new("Text");spaceIndicator.Center = true;spaceIndicator.Outline = true;spaceIndicator.Color = Color3.new(1,1,1);spaceIndicator.Font = Drawing.Fonts.Plex;spaceIndicator.Size = 16;spaceIndicator.Visible = false;spaceIndicator.Text = "-"
+local ctrlIndicator = Drawing.new("Text");ctrlIndicator.Center = true;ctrlIndicator.Outline = true;ctrlIndicator.Color = Color3.new(1,1,1);ctrlIndicator.Font = Drawing.Fonts.Plex;ctrlIndicator.Size = 16;ctrlIndicator.Visible = false;ctrlIndicator.Text = "-"
 
 drawingGroup:addToggle({text = "Drawing Enabled",flag = "drawing_enabled",callback = function()
     while library.flags["drawing_enabled"] do wait()
@@ -815,9 +829,13 @@ local movementGroup = miscTab:createGroup(0)
 local otherGroup = miscTab:createGroup(0)
 local otherGroup2 = miscTab:createGroup(1)
 
+local bunnyHopping = false
+local oldSpeedUpdate = client.speedupdate
 movementGroup:addToggle({text = "Bunny Hop",flag = "bunny_hop",callback = function()
     while library.flags["bunny_hop"] do runService.RenderStepped:Wait()--wait()
         if isAlive() and userInputService:IsKeyDown(Enum.KeyCode.Space) then
+            client.speedupdate = function() end
+            bunnyHopping = true
             localPlayer.Character.Humanoid.Jump = true
             local speed = library.flags["bhop_speed"]
             local dir = camera.CFrame.LookVector * Vector3.new(1,0,1)
@@ -830,8 +848,14 @@ movementGroup:addToggle({text = "Bunny Hop",flag = "bunny_hop",callback = functi
                 move = move.Unit
                 localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(move.X*speed,localPlayer.Character.HumanoidRootPart.Velocity.Y,move.Z*speed)
             end
+        else
+            if bunnyHopping then
+                bunnyHopping = false
+                client.speedupdate = oldSpeedUpdate
+            end
         end
     end
+    bunnyHopping = false
 end})
 movementGroup:addToggle({text = "Jumpbug",flag = "jump_bug"})
 movementGroup:addToggle({text = "Edgebug",flag = "edge_bug"})
@@ -841,7 +865,6 @@ movementGroup:addSlider({text = "Speed",flag = "bhop_speed",min = 1,max = 50,val
 
 otherGroup:addToggle({text = "Prevent Fall Damage",flag = "fall_damage"})
 otherGroup:addToggle({text = "Prevent Fire Damage",flag = "fire_damage"})
-otherGroup:addToggle({text = "Remove Recoil",flag = "remove_recoil"})
 otherGroup:addToggle({text = "Infinite Cash",flag = "inf_cash",callback = function()
     if not library.flags["inf_cash"] then
         wait()
@@ -877,20 +900,6 @@ otherGroup2:addToggle({text = "Splatoon Sound Effects",flag = "splatoon_sounds",
 	end
 end})
 otherGroup2:addList({text = "Hit Sound",flag = "hitsound_value",values = {"Bameware","Bell","Bubble","Pick","Pop","Rust","Skeet","Neverlose","Minecraft"}})
-otherGroup2:addButton({text = "Crash Server",callback = function()
-    if not isAlive() then
-        library:notify("Waiting until you respawn...")
-        repeat wait(1) until isAlive()
-    end
-    library:notify("Crashing server...")
-    while runService.RenderStepped:Wait() do
-        for i=1,20 do
-            pcall(function()
-                replicatedStorage.Events.DropMag:FireServer(localPlayer.Character.Gun.Mag)
-            end)
-        end
-    end
-end})
 otherGroup2:addButton({text = "Unlock All Skins",callback = function() 
     if not unlockInventory then
         unlockInventory = true
@@ -1160,11 +1169,6 @@ function onStep()
     else
         lighting.Ambient = oldAmbient
         lighting.OutdoorAmbient = oldOutdoorAmbient
-    end
-    if library.flags["remove_recoil"] then
-        client.RecoilX = 0
-        client.RecoilY = 0
-        client.resetaccuracy()
     end
     wIndicator.Visible = library.flags["drawing_enabled"] and library.flags["wasd_indicator"]
     aIndicator.Visible = library.flags["drawing_enabled"] and library.flags["wasd_indicator"]
